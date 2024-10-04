@@ -13,7 +13,8 @@ data class QA(
     val CorrectAns:Int
 )
 
-val QList= mutableListOf(QA(1,"What Country does this Flag Belong to ?",R.drawable.flag_of_india,"India","France","UK","UAE",1),
-    QA(2,"What Country does this Flag Belong to ?",R.drawable.flag_us_svgrepo_com,"IRAN","RUSSIA","USA","UKRAINE",3)
-            ,QA(3,"What Country does this Flag Belong to ?",R.drawable.flag_of_sri_lanka,"pakistan","Germany","Nepal","Srilanka",4),
-    QA(4,"What Country does this Flag Belong to ?",R.drawable.flag_of_russia,"Ukraine","Russia","Poland","China",2))
+val QList= mutableListOf(QA(1,"What Country does this flag belong to?",R.drawable.ic_flag_of_australia,"Argentina","Australia","Armenia","Austria",1),
+    QA(2,"What Country does this flag belong to?",R.drawable.ic_flag_of_india,"USA","ThaiLand","India","Canada",3),
+    QA(3,"What Country does this flag belong to?",R.drawable.ic_flag_of_germany,"China","Palestine","Iran","Germany",4),
+    QA(4,"What Country does this flag belong to?",R.drawable.ic_flag_of_new_zealand,"Russia","New Zealand","France","itly",2)
+)

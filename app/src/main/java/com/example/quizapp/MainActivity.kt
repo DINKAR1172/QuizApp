@@ -72,6 +72,9 @@ fun Navigation(navHostController: NavHostController= rememberNavController()){
         composable(Screens.Second.route){
             Question(navHostController)
         }
+        composable(Screens.ResultScreen.route){
+            com.example.quizapp.Result()
+        }
     }
 }
 @Composable
