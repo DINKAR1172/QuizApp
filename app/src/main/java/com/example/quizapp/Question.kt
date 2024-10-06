@@ -41,29 +41,29 @@ import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Question(navHostController: NavHostController){
+fun Question(navHostController: NavHostController,vm: VM){
     var PG = remember { mutableStateOf<Float>(0.0F) }
     var indexing = remember { mutableStateOf(0) }
     var indexdata by remember { mutableStateOf(QList[indexing.value])}
-    var Result = remember { mutableStateOf(0) }
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(8.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-LazyColoumnDisplay(data = indexdata, progress =PG, {
+LazyColoumnDisplay(vm,data = indexdata, progress =PG, {
     if (indexing.value< QList.size-1){
         indexing.value+=1
         indexdata= QList[indexing.value]
     }
 
-},Result,indexing,{navHostController.navigate(Screens.ResultScreen.route)})
+},indexing,{navHostController.navigate(Screens.ResultScreen.route)})
 
     }
 }
 @Composable
-fun LazyColoumnDisplay(data:QA,progress:MutableState<Float>,onSubmitClicked:()->Unit,Result:MutableState<Int>,index:MutableState<Int>,onFinalScreen:()->Unit){
+fun LazyColoumnDisplay(vm: VM,data:QA,progress:MutableState<Float>,onSubmitClicked:()->Unit,index:MutableState<Int>,onFinalScreen:()->Unit){
     var selectedOption by remember { mutableStateOf(0) }
-    var colorofSelected by remember { mutableStateOf(Color.LightGray) }
-    var RealAns by remember { mutableStateOf(0) }
+    var colorofSelected by remember { mutableStateOf(0) }
+    var CorectAns by remember { mutableStateOf(0) }
+    var Result by remember { mutableStateOf(0) }
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)
@@ -86,7 +86,7 @@ fun LazyColoumnDisplay(data:QA,progress:MutableState<Float>,onSubmitClicked:()->
                     BorderStroke(2.dp, Color.Black)
                 } else
                     BorderStroke(0.dp, Color.Transparent)
-            ), colors = CardDefaults.cardColors(if (selectedOption==1) Color.Yellow else Color.LightGray)) {
+            ), colors = CardDefaults.cardColors(if (colorofSelected==1) Color.Red else if(CorectAns==1) Color.Green else Color.LightGray)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                 Text(text = "${data.Option1}")
             }
@@ -101,7 +101,7 @@ fun LazyColoumnDisplay(data:QA,progress:MutableState<Float>,onSubmitClicked:()->
                     BorderStroke(2.dp, Color.Black)
                 } else
                     BorderStroke(0.dp, Color.Transparent)
-            ), colors = CardDefaults.cardColors(if (selectedOption==2) Color.Yellow else Color.LightGray)) {
+            ), colors = CardDefaults.cardColors(if (colorofSelected==2) Color.Red else if(CorectAns==2) Color.Green else Color.LightGray)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                 Text(text = "${data.Option2}")
             }
@@ -116,7 +116,7 @@ fun LazyColoumnDisplay(data:QA,progress:MutableState<Float>,onSubmitClicked:()->
                     BorderStroke(2.dp, Color.Black)
                 } else
                     BorderStroke(0.dp, Color.Transparent)
-            ), colors = CardDefaults.cardColors(if (selectedOption==3) Color.Yellow else Color.LightGray)) {
+            ), colors = CardDefaults.cardColors(if (colorofSelected==3) Color.Red else if(CorectAns==3) Color.Green else Color.LightGray)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                 Text(text = "${data.Option3}")
             }
@@ -131,14 +131,21 @@ fun LazyColoumnDisplay(data:QA,progress:MutableState<Float>,onSubmitClicked:()->
                     BorderStroke(2.dp, Color.Black)
                 } else
                     BorderStroke(0.dp, Color.Transparent)
-            ), colors = CardDefaults.cardColors(if (selectedOption==4) Color.Yellow else Color.LightGray)) {
+            ), colors = CardDefaults.cardColors(if (colorofSelected==4) Color.Red else if(CorectAns==4) Color.Green else Color.LightGray)) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
                 Text(text = "${data.Option4}")    
             }
         }
         Spacer(modifier = Modifier.height(3.dp))
         Button(onClick = {
-
+if(selectedOption==data.CorrectAns){
+    CorectAns=data.CorrectAns
+    Result+=1
+}
+            else {
+                colorofSelected=selectedOption
+    CorectAns=data.CorrectAns
+            }
                          }, modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp), shape = RectangleShape, colors = ButtonDefaults.buttonColors(Color.Blue)) {
@@ -148,6 +155,8 @@ fun LazyColoumnDisplay(data:QA,progress:MutableState<Float>,onSubmitClicked:()->
             Button(onClick = {
                 onSubmitClicked()
                 selectedOption=0
+                colorofSelected=0
+                CorectAns=0
                 progress.value+=0.33F
             }, modifier = Modifier
                 .fillMaxWidth()
@@ -157,6 +166,7 @@ fun LazyColoumnDisplay(data:QA,progress:MutableState<Float>,onSubmitClicked:()->
         }
         if (index.value==QList.size-1){
             Button(onClick = {
+                vm.setResult(Result)
                 onFinalScreen()
             }, modifier = Modifier
                 .fillMaxWidth()
